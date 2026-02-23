@@ -1,0 +1,5 @@
+payment_method_key,store
+paymentTemplateCreditCard,DE
+paymentTemplateCreditCard,AT
+paymentTemplateInvoice,DE
+paymentTemplateInvoice,AT
