@@ -52,7 +52,7 @@ If the PSP module requires API credentials, configure them appropriately for you
 **Location:** `config/Shared/config_local.php` (never commit this file)
 
 ```php
-use SprykerEco\Shared\YourPsp\YourPspConstants;
+use Spryker\Shared\YourPsp\YourPspConstants;
 
 // Example - check module documentation for actual constants
 $config[YourPspConstants::API_KEY] = 'your-sandbox-api-key';
@@ -69,7 +69,7 @@ $config[YourPspConstants::ENVIRONMENT] = 'sandbox';
 Use environment variables for production credentials - never hardcode production secrets:
 
 ```php
-use SprykerEco\Shared\YourPsp\YourPspConstants;
+use Spryker\Shared\YourPsp\YourPspConstants;
 
 $config[YourPspConstants::API_KEY] = getenv('YOUR_PSP_API_KEY') ?: '';
 $config[YourPspConstants::API_SECRET] = getenv('YOUR_PSP_API_SECRET') ?: '';
@@ -150,8 +150,8 @@ Register the module's plugins in your project's dependency providers.
 **Location:** `src/Pyz/Zed/Checkout/CheckoutDependencyProvider.php`
 
 ```php
-use SprykerEco\Zed\YourPsp\Communication\Plugin\Checkout\YourPspCheckoutDoSaveOrderPlugin;
-use SprykerEco\Zed\YourPsp\Communication\Plugin\Checkout\YourPspCheckoutPostSavePlugin;
+use Spryker\Zed\YourPsp\Communication\Plugin\Checkout\YourPspCheckoutDoSaveOrderPlugin;
+use Spryker\Zed\YourPsp\Communication\Plugin\Checkout\YourPspCheckoutPostSavePlugin;
 
 /**
  * @param \Spryker\Zed\Kernel\Container $container
@@ -187,7 +187,7 @@ protected function getCheckoutPostHooks(Container $container): array
 **Location:** `src/Pyz/Zed/Payment/PaymentDependencyProvider.php`
 
 ```php
-use SprykerEco\Zed\YourPsp\Communication\Plugin\Payment\YourPspPaymentMethodFilterPlugin;
+use Spryker\Zed\YourPsp\Communication\Plugin\Payment\YourPspPaymentMethodFilterPlugin;
 
 /**
  * @return array<\Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentMethodFilterPluginInterface>
@@ -208,11 +208,11 @@ protected function getPaymentMethodFilterPlugins(): array
 ```php
 use Spryker\Yves\StepEngine\Dependency\Plugin\Form\SubFormPluginCollection;
 use Spryker\Yves\StepEngine\Dependency\Plugin\Handler\StepHandlerPluginCollection;
-use SprykerEco\Shared\YourPsp\YourPspConfig;
-use SprykerEco\Yves\YourPsp\Plugin\StepEngine\YourPspCreditCardSubFormPlugin;
-use SprykerEco\Yves\YourPsp\Plugin\StepEngine\YourPspCreditCardStepHandlerPlugin;
-use SprykerEco\Yves\YourPsp\Plugin\StepEngine\YourPspInvoiceSubFormPlugin;
-use SprykerEco\Yves\YourPsp\Plugin\StepEngine\YourPspInvoiceStepHandlerPlugin;
+use Spryker\Shared\YourPsp\YourPspConfig;
+use Spryker\Yves\YourPsp\Plugin\StepEngine\YourPspCreditCardSubFormPlugin;
+use Spryker\Yves\YourPsp\Plugin\StepEngine\YourPspCreditCardStepHandlerPlugin;
+use Spryker\Yves\YourPsp\Plugin\StepEngine\YourPspInvoiceSubFormPlugin;
+use Spryker\Yves\YourPsp\Plugin\StepEngine\YourPspInvoiceStepHandlerPlugin;
 
 /**
  * @param \Spryker\Yves\Kernel\Container $container
@@ -265,7 +265,7 @@ protected function extendSubFormPluginCollection(Container $container): Containe
 **Location:** `src/Pyz/Yves/Router/RouterDependencyProvider.php`
 
 ```php
-use SprykerEco\Yves\YourPsp\Plugin\Router\YourPspRouteProviderPlugin;
+use Spryker\Yves\YourPsp\Plugin\Router\YourPspRouteProviderPlugin;
 
 /**
  * @return array<\Spryker\Yves\RouterExtension\Dependency\Plugin\RouteProviderPluginInterface>
@@ -300,7 +300,7 @@ Add the module's OMS directory to your project configuration so Spryker can find
 
 ```php
 use Spryker\Shared\Oms\OmsConstants;
-use SprykerEco\Shared\PaymentTemplate\PaymentTemplateConfig;
+use Spryker\Shared\PaymentTemplate\PaymentTemplateConfig;
 
 $config[OmsConstants::PROCESS_LOCATION] = [
     // ... other previously configured locations

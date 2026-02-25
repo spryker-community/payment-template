@@ -57,9 +57,9 @@ class PaymentTemplateRenamer
 
     private const TEMPLATE_SCREAMING = 'PAYMENT_TEMPLATE';
 
-    private const TEMPLATE_NAMESPACE = 'SprykerEco';
+    private const TEMPLATE_NAMESPACE = 'Spryker';
 
-    private const DEFAULT_MODULE_NAMESPACE = 'SprykerEco';
+    private const DEFAULT_MODULE_NAMESPACE = 'Spryker';
 
     private const DEFAULT_PROJECT_NAMESPACE = 'Pyz';
 
@@ -287,7 +287,7 @@ class PaymentTemplateRenamer
 
     /**
      * Convert PascalCase namespace to kebab-case
-     * Examples: Acme → acme, MyCompany → my-company, SprykerEco → spryker-eco
+     * Examples: Acme → acme, MyCompany → my-company, Spryker → spryker
      */
     private function convertToKebabCase(string $pascalCase): string
     {
@@ -311,7 +311,7 @@ class PaymentTemplateRenamer
 
         // Validate that this is a payment-template structure
         $requiredPaths = [
-            'src/SprykerEco',
+            'src/Spryker',
             'composer.json',
         ];
 
@@ -525,14 +525,14 @@ class PaymentTemplateRenamer
         }
 
         $this->output("Content replacements (will be applied):\n");
-        $this->output("  Namespaces: SprykerEco\\Zed\\PaymentTemplate → {$this->namespace}\\Zed\\{$this->providerNamePascal}\n");
+        $this->output("  Namespaces: Spryker\\Zed\\PaymentTemplate → {$this->namespace}\\Zed\\{$this->providerNamePascal}\n");
         $this->output("  Class names: PaymentTemplateFacade → {$this->providerNamePascal}Facade\n");
         $this->output("  Variables: \$paymentTemplateTransfer → \${$this->providerNameCamel}Transfer\n");
         $this->output("  Routes: payment-template-redirect → {$this->providerNameKebab}-redirect\n");
         $this->output("  Tables: spy_payment_template → spy_{$this->providerNameSnake}\n");
         $this->output("  Constants: PAYMENT_TEMPLATE → {$this->providerNameScreaming}\n");
         if ($this->namespace !== self::TEMPLATE_NAMESPACE) {
-            $this->output("  Namespace root: SprykerEco → {$this->namespace}\n");
+            $this->output("  Namespace root: Spryker → {$this->namespace}\n");
         }
         $this->output("\n");
     }
@@ -591,7 +591,7 @@ class PaymentTemplateRenamer
         $this->output("Copying files to project layers...\n");
 
         $layers = ['Zed', 'Yves', 'Client', 'Shared'];
-        $sourceBase = $this->sourcePath . '/src/SprykerEco';
+        $sourceBase = $this->sourcePath . '/src/Spryker';
 
         foreach ($layers as $layer) {
             $sourceLayerPath = $sourceBase . '/' . $layer . '/PaymentTemplate';
@@ -880,7 +880,7 @@ class PaymentTemplateRenamer
             if (isset($composer['autoload']['psr-4'])) {
                 $newAutoload = [];
                 foreach ($composer['autoload']['psr-4'] as $namespace => $path) {
-                    // Replace SprykerEco with custom namespace
+                    // Replace Spryker with custom namespace
                     $newNamespace = str_replace(self::TEMPLATE_NAMESPACE . '\\', $this->namespace . '\\', $namespace);
                     $newPath = str_replace(self::TEMPLATE_NAMESPACE, $this->namespace, $path);
                     $newAutoload[$newNamespace] = $newPath;

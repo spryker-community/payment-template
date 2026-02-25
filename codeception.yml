@@ -1,6 +1,6 @@
-namespace: SprykerEcoTest
+namespace: SprykerTest
 include:
-    - tests/SprykerEcoTest/Zed/PaymentTemplate
+    - tests/SprykerTest/Zed/PaymentTemplate
 paths:
     tests: tests/
     output: tests/_output/
