@@ -226,7 +226,7 @@ composer require your-org/adyen
 ## 🏗️ Architecture Overview
 
 ```
-SprykerEco/
+Spryker/
 ├── Shared/
 │   └── YourPsp/
 │       ├── YourPspConfig.php           # Payment method keys, provider name

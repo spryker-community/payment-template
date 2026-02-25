@@ -129,7 +129,7 @@ git push
 
 The script automatically handles all renaming for:
 - **Files and directories**: `PaymentTemplateFacade.php` → `AdyenFacade.php`
-- **PHP namespaces**: `SprykerEco\Zed\PaymentTemplate` → `SprykerEco\Zed\Adyen` (or custom namespace if `--namespace` is used)
+- **PHP namespaces**: `Spryker\Zed\PaymentTemplate` → `Spryker\Zed\Adyen` (or custom namespace if `--namespace` is used)
 - **Class names**: `PaymentTemplateFacade` → `AdyenFacade`
 - **Variables**: `$paymentTemplateTransfer` → `$adyenTransfer`
 - **Routes**: `payment-template-redirect` → `adyen-redirect`
@@ -142,7 +142,7 @@ The script automatically handles all renaming for:
 
 - `--in-place` - Rename files in current directory (for GitHub template workflow)
 - `--dry-run` - Preview changes without modifying anything
-- `--namespace=<namespace>` - Use custom namespace instead of default SprykerEco (for example, `--namespace=Acme`)
+- `--namespace=<namespace>` - Use custom namespace instead of default Spryker (for example, `--namespace=Acme`)
 - `--project-path=<path>` - Copy files directly to project namespace for direct project integration (for example, `--project-path=/path/to/spryker/project`)
 
 **Flag combinations:**
@@ -155,7 +155,7 @@ The script automatically handles all renaming for:
 
 - The rename script accepts PSP names in **kebab-case** format only (e.g., `adyen`, `pay-pal`, `stripe-connect`)
 - All case conversions (PascalCase, camelCase, snake_case, SCREAMING_SNAKE_CASE) are handled automatically
-- **Default namespace**: SprykerEco (for reusable modules). Use `--namespace` to specify custom namespace:
+- **Default namespace**: Spryker (for reusable modules). Use `--namespace` to specify custom namespace:
   - For partner/agency modules: `--namespace=Acme` or `--namespace=MyCompany`
   - For direct project integration: Defaults to `Pyz` if `--project-path` is used without `--namespace`
 - After renaming, update this IMPLEMENTATION.md file to replace "PaymentTemplate" references with your PSP name
@@ -172,30 +172,30 @@ Use this checklist to track your implementation progress. All items marked with 
 ### 1. Configuration & Setup
 
 - [ ] ⚠️ **Define PSP-specific status constants** in `PaymentTemplateConfig`
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/PaymentTemplateConfig.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/PaymentTemplateConfig.php`
   - Define constants for all payment states your PSP supports
   - Examples: `PAYMENT_STATUS_AUTHORIZED`, `PAYMENT_STATUS_CAPTURED`, `PAYMENT_STATUS_CANCELLED`
   - These constants are referenced throughout the codebase in status update methods
 
 - [ ] ⚠️ **Configure PSP API credentials** in `PaymentTemplateConstants`
-  - Location: `src/SprykerEco/Shared/PaymentTemplate/PaymentTemplateConstants.php`
+  - Location: `src/Spryker/Shared/PaymentTemplate/PaymentTemplateConstants.php`
   - Add constants for: API keys, secret keys, webhook secrets, environment URLs
   - Store sensitive values in `config/Shared/config_local.php` (never commit to repository)
 
 - [ ] ⚠️ **Update payment provider name**
-  - Location: `src/SprykerEco/Shared/PaymentTemplate/PaymentTemplateConfig.php`
+  - Location: `src/Spryker/Shared/PaymentTemplate/PaymentTemplateConfig.php`
   - Change `PAYMENT_PROVIDER_NAME` constant from 'paymentTemplate' to your PSP name
   - This name is used throughout checkout and OMS processes
 
 - [ ] **Configure API endpoint URLs**
-  - Location: `src/SprykerEco/Client/PaymentTemplate/PaymentTemplateConfig.php`
+  - Location: `src/Spryker/Client/PaymentTemplate/PaymentTemplateConfig.php`
   - Implement `getAuthorizationUrl()`, `getCaptureUrl()`, `getCancelUrl()`, `getPaymentMethodsUrl()`
   - Use environment-based configuration for production vs sandbox URLs
 
 ### 2. Transfer Object Schema
 
 - [ ] ⚠️ **Define PSP-specific transfer object fields**
-  - Location: `src/SprykerEco/Shared/PaymentTemplate/Transfer/payment_template.transfer.xml`
+  - Location: `src/Spryker/Shared/PaymentTemplate/Transfer/payment_template.transfer.xml`
   - Add fields required by your PSP to `PaymentTemplateTransfer`
   - Common fields: amount, currency, providerReference, paymentMethodToken, status
   - Run `vendor/bin/console transfer:generate` after changes
@@ -214,7 +214,7 @@ Use this checklist to track your implementation progress. All items marked with 
 ### 3. Database Schema
 
 - [ ] ⚠️ **Update database schema** for PSP-specific fields
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Persistence/Propel/Schema/spy_payment_template.schema.xml`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Persistence/Propel/Schema/spy_payment_template.schema.xml`
   - Add columns for: provider reference, status, payment method token, timestamps
   - Ensure foreign key relationships are correct
   - Documentation: [Database schema definition](https://docs.spryker.com/docs/dg/dev/backend-development/zed/persistence-layer/database-schema-definition.html)
@@ -225,42 +225,42 @@ Use this checklist to track your implementation progress. All items marked with 
   - Run migration: `vendor/bin/console propel:migration:migrate`
 
 - [ ] ⚠️ **Implement status field usage** in `PaymentTemplateEntityManager`
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Persistence/PaymentTemplateEntityManager.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Persistence/PaymentTemplateEntityManager.php`
   - Uncomment and implement status update logic in `updatePaymentStatus()` method
   - Map status constants to database field
 
 - [ ] ⚠️ **Implement provider reference filtering** in `PaymentTemplateRepository`
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Persistence/PaymentTemplateRepository.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Persistence/PaymentTemplateRepository.php`
   - Implement `findPaymentTemplateByProviderReference()` method
   - Add proper filter by provider reference field
 
 ### 4. API Client Implementation
 
 - [ ] ⚠️ **Implement authorization API request mapper**
-  - Location: `src/SprykerEco/Client/PaymentTemplate/Api/Authorization/AuthorizationMapper.php`
+  - Location: `src/Spryker/Client/PaymentTemplate/Api/Authorization/AuthorizationMapper.php`
   - Implement `mapRequest()`: Convert `PaymentTemplateAuthorizeRequestTransfer` to PSP API format
   - Implement `mapResponse()`: Parse successful PSP response to `PaymentTemplateAuthorizeResponseTransfer`
   - Implement `mapErrorResponse()`: Parse error response to `PaymentTemplateApiErrorResponseTransfer`
 
 - [ ] ⚠️ **Implement capture API request mapper**
-  - Location: `src/SprykerEco/Client/PaymentTemplate/Api/Capture/CaptureMapper.php`
+  - Location: `src/Spryker/Client/PaymentTemplate/Api/Capture/CaptureMapper.php`
   - Implement all three mapper methods (request, response, error)
 
 - [ ] ⚠️ **Implement cancel API request mapper**
-  - Location: `src/SprykerEco/Client/PaymentTemplate/Api/Cancel/CancelMapper.php`
+  - Location: `src/Spryker/Client/PaymentTemplate/Api/Cancel/CancelMapper.php`
   - Implement all three mapper methods (request, response, error)
 
 - [ ] ⚠️ **Implement payment methods API request mapper**
-  - Location: `src/SprykerEco/Client/PaymentTemplate/Api/PaymentMethods/PaymentMethodsMapper.php`
+  - Location: `src/Spryker/Client/PaymentTemplate/Api/PaymentMethods/PaymentMethodsMapper.php`
   - Implement all three mapper methods (request, response, error)
 
 - [ ] **Add authentication headers** to API requests
-  - Location: Various `*ApiRequest.php` files in `src/SprykerEco/Client/PaymentTemplate/Api/*/`
+  - Location: Various `*ApiRequest.php` files in `src/Spryker/Client/PaymentTemplate/Api/*/`
   - Implement PSP-specific authentication (API keys, bearer tokens, signatures)
   - Update `sendRequest()` methods to include authentication headers
 
 - [ ] **Implement API request logging**
-  - Location: `src/SprykerEco/Client/PaymentTemplate/Api/ApiLogger.php`
+  - Location: `src/Spryker/Client/PaymentTemplate/Api/ApiLogger.php`
   - Customize logging implementation for debugging and audit trails
   - Ensure sensitive data (card numbers, API keys) is masked
 
@@ -268,97 +268,97 @@ Use this checklist to track your implementation progress. All items marked with 
 
 #### Payment Saver
 - [ ] **Customize payment data persistence**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentSaver.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentSaver.php`
   - Update `createPaymentTemplateTransfer()` to map additional PSP-specific fields from checkout
 
 #### Payment Authorizer
 - [ ] ⚠️ **Implement authorization request builder**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentAuthorizer.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentAuthorizer.php`
   - Method: `buildAuthorizeRequest()`
   - Map data from `PaymentTemplateTransfer` to `PaymentTemplateAuthorizeRequestTransfer`
   - Add additional method parameters if needed (QuoteTransfer, CheckoutResponseTransfer)
 
 - [ ] ⚠️ **Implement authorization error handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentAuthorizer.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentAuthorizer.php`
   - Method: `handleAuthorizationError()`
   - Extract error details from `PaymentTemplateApiErrorResponseTransfer`
   - Update payment status with appropriate failure constant
   - Optionally extract and save provider reference
 
 - [ ] ⚠️ **Implement post-authorization update**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentAuthorizer.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentAuthorizer.php`
   - Method: `updatePaymentAfterAuthorization()`
   - Extract success data (provider reference, status) from response
   - Update payment status with authorized constant
 
 #### OMS Command Handler
 - [ ] ⚠️ **Implement authorize command request builder**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `buildAuthorizeRequest()`
   - Map data from `PaymentTemplateTransfer` to authorization request
   - Add additional parameters if PSP requires data not in PaymentTemplateTransfer
 
 - [ ] ⚠️ **Implement authorize command error handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `handleAuthorizeError()`
   - Define and use appropriate status constant
   - Extract provider reference from error response if available
 
 - [ ] ⚠️ **Implement authorize command success handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `updatePaymentAfterAuthorize()`
   - Replace empty string with proper status constant
   - Extract and save provider reference from response
 
 - [ ] ⚠️ **Implement capture command request builder**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `buildCaptureRequest()`
   - Include provider reference from authorization
   - Add amount and currency if partial capture is supported
 
 - [ ] ⚠️ **Implement capture command error handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `handleCaptureError()`
   - Define and use appropriate status constant
 
 - [ ] ⚠️ **Implement capture command success handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `updatePaymentAfterCapture()`
   - Replace empty string with proper status constant
   - Extract and save provider reference from response
 
 - [ ] ⚠️ **Implement cancel command request builder**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `buildCancelRequest()`
   - Include provider reference from authorization
   - Add cancellation reason if required by PSP
 
 - [ ] ⚠️ **Implement cancel command error handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `handleCancelError()`
   - Define and use appropriate status constant
 
 - [ ] ⚠️ **Implement cancel command success handler**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Command/OmsCommandHandler.php`
   - Method: `updatePaymentAfterCancel()`
   - Replace empty string with proper status constant
   - Extract and save provider reference from response
 
 #### OMS Condition Checker
 - [ ] ⚠️ **Implement payment authorized condition**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Condition/OmsConditionChecker.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Condition/OmsConditionChecker.php`
   - Method: `isPaymentAuthorized()`
   - Replace `return true;` with actual status check against `PAYMENT_STATUS_AUTHORIZED`
   - Must align with status set in `OmsCommandHandler::updatePaymentAfterAuthorize()`
 
 - [ ] ⚠️ **Implement payment authorization failed condition**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Condition/OmsConditionChecker.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Condition/OmsConditionChecker.php`
   - Method: `isPaymentAuthorizationFailed()`
   - Replace `return false;` with actual status check against `PAYMENT_STATUS_AUTHORIZATION_FAILED`
   - Must align with status set in `OmsCommandHandler::handleAuthorizeError()`
 
 - [ ] ⚠️ **Implement payment captured condition**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Oms/Condition/OmsConditionChecker.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Oms/Condition/OmsConditionChecker.php`
   - Method: `isPaymentCaptured()`
   - Replace `return true;` with actual status check against `PAYMENT_STATUS_CAPTURED`
   - Must align with status set in `OmsCommandHandler::updatePaymentAfterCapture()`
@@ -369,25 +369,25 @@ Use this checklist to track your implementation progress. All items marked with 
 
 #### Payment Method Filter
 - [ ] ⚠️ **Implement payment method availability check**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentMethodFilter.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentMethodFilter.php`
   - Method: `isPaymentMethodAllowed()`
   - Replace `return true;` with actual check using PSP response
   - Typically: `return in_array($paymentMethodName, $paymentTemplateAvailablePaymentMethods, true);`
 
 - [ ] ⚠️ **Implement payment methods request builder**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentMethodFilter.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentMethodFilter.php`
   - Method: `buildPaymentMethodsRequest()`
   - Map data from QuoteTransfer (amount, currency, billing address, etc.)
 
 - [ ] ⚠️ **Implement available payment methods extraction**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Payment/PaymentMethodFilter.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Payment/PaymentMethodFilter.php`
   - Method: `getPaymentTemplateAvailablePaymentMethods()`
   - Replace `return [];` with actual extraction from PSP response
   - Return array of payment method identifiers that match configured method names
 
 #### Notification Processor
 - [ ] ⚠️ **Implement webhook processing logic**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Business/Notification/NotificationProcessor.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Business/Notification/NotificationProcessor.php`
   - Method: `processWebhook()`
   - Implement webhook signature validation for security
   - Parse webhook payload to identify event type
@@ -401,22 +401,22 @@ Use this checklist to track your implementation progress. All items marked with 
 Documentation: [Forms](https://docs.spryker.com/docs/dg/dev/backend-development/forms/forms.html) | [Checkout Process](https://docs.spryker.com/docs/pbc/all/cart-and-checkout/latest/base-shop/extend-and-customize/checkout-process-review-and-implementation)
 
 - [ ] **Customize credit card payment form**
-  - Location: `src/SprykerEco/Yves/PaymentTemplate/Form/PaymentTemplateCreditCardSubForm.php`
+  - Location: `src/Spryker/Yves/PaymentTemplate/Form/PaymentTemplateCreditCardSubForm.php`
   - Add PSP-specific fields (e.g., JS library keys)
   - Implement client-side validation
   - Integrate PSP JavaScript SDK if required
 
 - [ ] **Customize invoice payment form**
-  - Location: `src/SprykerEco/Yves/PaymentTemplate/Form/PaymentTemplateInvoiceSubForm.php`
+  - Location: `src/Spryker/Yves/PaymentTemplate/Form/PaymentTemplateInvoiceSubForm.php`
   - Add invoice-specific fields required by PSP
 
 - [ ] **Update form data providers**
-  - Location: `src/SprykerEco/Yves/PaymentTemplate/Form/DataProvider/`
+  - Location: `src/Spryker/Yves/PaymentTemplate/Form/DataProvider/`
   - Customize `getData()` and `getOptions()` methods if needed
   - Add PSP-specific form options
 
 - [ ] **Create form templates**
-  - Location: `src/SprykerEco/Yves/PaymentTemplate/Theme/default/views/`
+  - Location: `src/Spryker/Yves/PaymentTemplate/Theme/default/views/`
   - Create Twig templates for each payment method
   - Integrate PSP hosted payment fields or SDK if applicable
 
@@ -449,7 +449,7 @@ Documentation: [Order Management System](https://docs.spryker.com/docs/pbc/all/o
   - Update state display names in `glossary.csv` if you add custom states
 
 - [ ] **Verify OMS command registrations**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/PaymentTemplateDependencyProvider.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/PaymentTemplateDependencyProvider.php`
   - Method: `provideCommunicationLayerDependencies()` → command plugin section
   - **Default commands registered**:
     - `PaymentTemplate/Authorize` → `OmsAuthorizeCommandPlugin`
@@ -458,7 +458,7 @@ Documentation: [Order Management System](https://docs.spryker.com/docs/pbc/all/o
   - Add additional command plugins if you added custom commands to OMS
 
 - [ ] **Verify OMS condition registrations**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/PaymentTemplateDependencyProvider.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/PaymentTemplateDependencyProvider.php`
   - Method: `provideCommunicationLayerDependencies()` → condition plugin section
   - **Default conditions registered**:
     - `PaymentTemplate/IsAuthorized` → `IsAuthorizedConditionPlugin`
@@ -476,7 +476,7 @@ Documentation: [Order Management System](https://docs.spryker.com/docs/pbc/all/o
 ### 9. Webhook Endpoint
 
 - [ ] ⚠️ **Implement webhook controller**
-  - Location: `src/SprykerEco/Zed/PaymentTemplate/Communication/Controller/WebhookController.php`
+  - Location: `src/Spryker/Zed/PaymentTemplate/Communication/Controller/WebhookController.php`
   - Implement `indexAction()` to receive webhook POST requests
   - Parse raw request body to `PaymentTemplateWebhookPayloadTransfer`
   - Call `PaymentTemplateFacade::processWebhook()`
