@@ -8,8 +8,6 @@
 namespace Spryker\Client\PaymentTemplate\Api\Refund;
 
 use Generated\Shared\Transfer\PaymentTemplateApiErrorResponseTransfer;
-use Generated\Shared\Transfer\PaymentTemplateCaptureRequestTransfer;
-use Generated\Shared\Transfer\PaymentTemplateCaptureResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplateRefundRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplateRefundResponseTransfer;
 use GuzzleHttp\Exception\RequestException;

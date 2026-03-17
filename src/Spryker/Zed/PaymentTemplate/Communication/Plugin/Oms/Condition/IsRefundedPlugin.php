@@ -22,7 +22,7 @@ class IsRefundedPlugin extends AbstractPlugin implements ConditionInterface
      * {@inheritDoc}
      * - Checks if payment capture is confirmed.
      * - Reads status from spy_payment_template table.
-     * - Called by OMS to determine if transition to "captured" state is actual.
+     * - Called by OMS to determine if transition to "refunded" state is actual.
      *
      * @api
      *
