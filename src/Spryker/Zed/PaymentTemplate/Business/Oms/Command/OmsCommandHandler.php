@@ -15,6 +15,8 @@ use Generated\Shared\Transfer\PaymentTemplateCancelRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplateCancelResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplateCaptureRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplateCaptureResponseTransfer;
+use Generated\Shared\Transfer\PaymentTemplateRefundRequestTransfer;
+use Generated\Shared\Transfer\PaymentTemplateRefundResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplateTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Spryker\Client\PaymentTemplate\PaymentTemplateClientInterface;
@@ -94,6 +96,39 @@ class OmsCommandHandler implements OmsCommandHandlerInterface
             $this->updatePaymentAfterCapture($paymentTemplateTransfer, $paymentTemplateCaptureRequestTransfer, $paymentTemplateCaptureResponseTransfer);
         } catch (Exception $exception) {
             $this->handleCaptureError($paymentTemplateTransfer, $paymentTemplateCaptureRequestTransfer, null);
+        }
+    }
+
+    /**
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $orderEntity
+     * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $orderItems
+     *
+     * @return void
+     */
+    public function executeRefundCommand(SpySalesOrder $orderEntity, array $orderItems): void
+    {
+        $paymentTemplateTransfer = $this->paymentReader->findPaymentByIdSalesOrder(
+            $orderEntity->getIdSalesOrder(),
+        );
+
+        if ($paymentTemplateTransfer === null) {
+            return;
+        }
+
+        $paymentTemplateRefundRequestTransfer = $this->buildRefundRequest($paymentTemplateTransfer);
+
+        try {
+            $paymentTemplateRefundResponseTransfer = $this->client->refund($paymentTemplateRefundRequestTransfer);
+
+            if (!$paymentTemplateRefundResponseTransfer->getIsSuccess()) {
+                $this->handleRefundError($paymentTemplateTransfer, $paymentTemplateRefundRequestTransfer, $paymentTemplateRefundResponseTransfer->getErrorResponse());
+
+                return;
+            }
+
+            $this->updatePaymentAfterRefund($paymentTemplateTransfer, $paymentTemplateRefundRequestTransfer, $paymentTemplateRefundResponseTransfer);
+        } catch (Exception $exception) {
+            $this->handleRefundError($paymentTemplateTransfer, $paymentTemplateRefundRequestTransfer, null);
         }
     }
 
@@ -228,6 +263,58 @@ class OmsCommandHandler implements OmsCommandHandlerInterface
         //     $paymentTemplateTransfer->getIdPaymentTemplateOrFail(),
         //     PaymentTemplateConfig::PAYMENT_STATUS_CAPTURED,
         //     $paymentTemplateCaptureResponseTransfer->getProviderReference(),
+        // );
+        $this->entityManager->updatePaymentStatus(
+            $paymentTemplateTransfer->getIdPaymentTemplateOrFail(),
+            '',
+        );
+    }
+
+    protected function buildRefundRequest(PaymentTemplateTransfer $paymentTemplateTransfer): PaymentTemplateRefundRequestTransfer
+    {
+        // TODO: Compose the request transfer from data in the PaymentTemplateTransfer.
+        // If your payment service provider requires additional data not available in PaymentTemplateTransfer,
+        // add additional parameters to this method signature and pass them from executeRefundCommand.
+        // e.g.
+        // return (new PaymentTemplateRefundRequestTransfer())
+        //     ->setProviderReference($paymentTemplateTransfer->getProviderReference())
+        //     ->setAmount($paymentTemplateTransfer->getAmount())
+        //     ->setCurrency($paymentTemplateTransfer->getCurrency());
+        return (new PaymentTemplateRefundRequestTransfer());
+    }
+
+    protected function handleRefundError(
+        PaymentTemplateTransfer $paymentTemplateTransfer,
+        PaymentTemplateRefundRequestTransfer $paymentTemplateRefundRequestTransfer,
+        ?PaymentTemplateApiErrorResponseTransfer $paymentTemplateApiErrorResponseTransfer
+    ): void {
+        // TODO: Define status constants in PaymentTemplateConfig based on payment service provider specific statuses.
+        // Extract error details from $paymentTemplateApiErrorResponseTransfer if needed and pass appropriate status to updatePaymentStatus.
+        // You may need to handle different error types with different status constants.
+        // e.g.
+        // $this->entityManager->updatePaymentStatus(
+        //     $paymentTemplateTransfer->getIdPaymentTemplateOrFail(),
+        //     PaymentTemplateConfig::PAYMENT_STATUS_REFUND_FAILED,
+        //     $paymentTemplateApiErrorResponseTransfer?->getProviderReference(),
+        // );
+        $this->entityManager->updatePaymentStatus(
+            $paymentTemplateTransfer->getIdPaymentTemplateOrFail(),
+            PaymentTemplateConfig::PAYMENT_STATUS_REFUND_FAILED,
+        );
+    }
+
+    protected function updatePaymentAfterRefund(
+        PaymentTemplateTransfer $paymentTemplateTransfer,
+        PaymentTemplateRefundRequestTransfer $paymentTemplateRefundRequestTransfer,
+        PaymentTemplateRefundResponseTransfer $paymentTemplateRefundResponseTransfer,
+    ): void {
+        // TODO: Define status constants in PaymentTemplateConfig based on payment service provider specific statuses.
+        // Extract the appropriate status from $paymentTemplateRefundResponseTransfer and pass it to updatePaymentStatus.
+        // e.g.
+        // $this->entityManager->updatePaymentStatus(
+        //     $paymentTemplateTransfer->getIdPaymentTemplateOrFail(),
+        //     PaymentTemplateConfig::PAYMENT_STATUS_REFUNDED,
+        //     $paymentTemplateRefundResponseTransfer->getProviderReference(),
         // );
         $this->entityManager->updatePaymentStatus(
             $paymentTemplateTransfer->getIdPaymentTemplateOrFail(),

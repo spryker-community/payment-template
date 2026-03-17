@@ -84,6 +84,18 @@
     </transfer>
 
     <!-- ========================================================================
+         REFUND OPERATION
+         ======================================================================== -->
+
+    <transfer name="PaymentTemplateRefundRequest" strict="true">
+    </transfer>
+
+    <transfer name="PaymentTemplateRefundResponse" strict="true">
+        <property name="isSuccess" type="bool"/>
+        <property name="errorResponse" type="PaymentTemplateApiErrorResponse"/>
+    </transfer>
+
+    <!-- ========================================================================
          CANCEL OPERATION
          ======================================================================== -->
 

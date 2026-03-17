@@ -9,6 +9,8 @@ namespace Spryker\Client\PaymentTemplate;
 
 use GuzzleHttp\Client;
 use Spryker\Client\Kernel\AbstractFactory;
+use Spryker\Client\PaymentTemplate\Api\Refund\RefundApiRequest;
+use Spryker\Client\PaymentTemplate\Api\Refund\RefundMapper;
 use Spryker\Client\ZedRequest\ZedRequestClientInterface;
 use Spryker\Client\PaymentTemplate\Api\ApiLogger;
 use Spryker\Client\PaymentTemplate\Api\Authorization\AuthorizationApiRequest;
@@ -70,6 +72,21 @@ class PaymentTemplateFactory extends AbstractFactory
     public function createCaptureMapper(): CaptureMapper
     {
         return new CaptureMapper();
+    }
+
+    public function createRefundRequest(): RefundApiRequest
+    {
+        return new RefundApiRequest(
+            $this->getConfig(),
+            $this->createApiLogger(),
+            $this->createGuzzleClient(),
+            $this->createRefundMapper(),
+        );
+    }
+
+    public function createRefundMapper(): RefundMapper
+    {
+        return new RefundMapper();
     }
 
     public function createCancelRequest(): CancelApiRequest

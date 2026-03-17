@@ -24,6 +24,8 @@ interface PaymentTemplateConstants
 
     public const string API_CAPTURE_PATH = 'PAYMENT_TEMPLATE:API_CAPTURE_PATH';
 
+    public const string API_REFUND_PATH = 'PAYMENT_TEMPLATE:API_REFUND_PATH';
+
     public const string API_CANCEL_PATH = 'PAYMENT_TEMPLATE:API_CANCEL_PATH';
 
     public const string API_PAYMENT_METHODS_PATH = 'PAYMENT_TEMPLATE:API_PAYMENT_METHODS_PATH';

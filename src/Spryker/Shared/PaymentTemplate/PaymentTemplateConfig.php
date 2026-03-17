@@ -77,6 +77,11 @@ class PaymentTemplateConfig extends AbstractSharedConfig
         return $this->get(PaymentTemplateConstants::API_CAPTURE_PATH, '/api/v1/capture');
     }
 
+    public function getRefundPath(): string
+    {
+        return $this->get(PaymentTemplateConstants::API_REFUND_PATH, '/api/v1/refund');
+    }
+
     public function getCancelPath(): string
     {
         return $this->get(PaymentTemplateConstants::API_CANCEL_PATH, '/api/v1/cancel');

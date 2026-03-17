@@ -16,4 +16,6 @@ interface OmsConditionCheckerInterface
     public function isPaymentAuthorizationFailed(SpySalesOrderItem $orderItemEntity): bool;
 
     public function isPaymentCaptured(SpySalesOrderItem $orderItemEntity): bool;
+
+    public function isPaymentRefunded(SpySalesOrderItem $orderItemEntity): bool;
 }

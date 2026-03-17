@@ -121,6 +121,23 @@ class PaymentTemplateFacade extends AbstractFacade implements PaymentTemplateFac
      *
      * @return void
      */
+    public function executeRefundCommand(SpySalesOrder $orderEntity, array $orderItems): void
+    {
+        $this->getFactory()
+            ->createOmsCommandHandler()
+            ->executeRefundCommand($orderEntity, $orderItems);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $orderEntity
+     * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $orderItems
+     *
+     * @return void
+     */
     public function executeCancelCommand(SpySalesOrder $orderEntity, array $orderItems): void
     {
         $this->getFactory()
@@ -174,6 +191,22 @@ class PaymentTemplateFacade extends AbstractFacade implements PaymentTemplateFac
         return $this->getFactory()
             ->createOmsConditionChecker()
             ->isPaymentCaptured($orderItemEntity);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrderItem $orderItemEntity
+     *
+     * @return bool
+     */
+    public function isPaymentRefunded(SpySalesOrderItem $orderItemEntity): bool
+    {
+        return $this->getFactory()
+            ->createOmsConditionChecker()
+            ->isPaymentRefunded($orderItemEntity);
     }
 
     /**

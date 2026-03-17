@@ -15,6 +15,8 @@ use Generated\Shared\Transfer\PaymentTemplateCaptureRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplateCaptureResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplatePaymentMethodsRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplatePaymentMethodsResponseTransfer;
+use Generated\Shared\Transfer\PaymentTemplateRefundRequestTransfer;
+use Generated\Shared\Transfer\PaymentTemplateRefundResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplateWebhookPayloadTransfer;
 use Generated\Shared\Transfer\PaymentTemplateWebhookProcessResponseTransfer;
 
@@ -44,11 +46,26 @@ interface PaymentTemplateClientInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\PaymentTemplateCaptureRequestTransfer $paymentTemplateAuthorizeResponseTransfer
+     * @param \Generated\Shared\Transfer\PaymentTemplateCaptureRequestTransfer $paymentTemplateCaptureRequestTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentTemplateCaptureResponseTransfer
      */
-    public function capture(PaymentTemplateCaptureRequestTransfer $paymentTemplateAuthorizeResponseTransfer): PaymentTemplateCaptureResponseTransfer;
+    public function capture(PaymentTemplateCaptureRequestTransfer $paymentTemplateCaptureRequestTransfer): PaymentTemplateCaptureResponseTransfer;
+
+    /**
+     * Specification:
+     * - Sends capture request to payment provider to capture authorized amount.
+     * - Maps request data to provider-specific format.
+     * - Returns capture response.
+     * - Logs the request, response and error.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentTemplateRefundRequestTransfer $paymentTemplateRefundRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentTemplateRefundResponseTransfer
+     */
+    public function refund(PaymentTemplateRefundRequestTransfer $paymentTemplateRefundRequestTransfer): PaymentTemplateRefundResponseTransfer;
 
     /**
      * Specification:
