@@ -15,6 +15,8 @@ use Generated\Shared\Transfer\PaymentTemplateCaptureRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplateCaptureResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplatePaymentMethodsRequestTransfer;
 use Generated\Shared\Transfer\PaymentTemplatePaymentMethodsResponseTransfer;
+use Generated\Shared\Transfer\PaymentTemplateRefundRequestTransfer;
+use Generated\Shared\Transfer\PaymentTemplateRefundResponseTransfer;
 use Generated\Shared\Transfer\PaymentTemplateWebhookPayloadTransfer;
 use Generated\Shared\Transfer\PaymentTemplateWebhookProcessResponseTransfer;
 use Spryker\Client\Kernel\AbstractClient;
@@ -33,9 +35,14 @@ class PaymentTemplateClient extends AbstractClient implements PaymentTemplateCli
         return $this->getFactory()->createAuthorizeRequest()->request($paymentTemplateAuthorizeRequestTransfer);
     }
 
-    public function capture(PaymentTemplateCaptureRequestTransfer $paymentTemplateAuthorizeResponseTransfer): PaymentTemplateCaptureResponseTransfer
+    public function capture(PaymentTemplateCaptureRequestTransfer $paymentTemplateCaptureRequestTransfer): PaymentTemplateCaptureResponseTransfer
     {
-        return $this->getFactory()->createCaptureRequest()->request($paymentTemplateAuthorizeResponseTransfer);
+        return $this->getFactory()->createCaptureRequest()->request($paymentTemplateCaptureRequestTransfer);
+    }
+
+    public function refund(PaymentTemplateRefundRequestTransfer $paymentTemplateRefundRequestTransfer): PaymentTemplateRefundResponseTransfer
+    {
+        return $this->getFactory()->createRefundRequest()->request($paymentTemplateRefundRequestTransfer);
     }
 
     public function cancel(PaymentTemplateCancelRequestTransfer $paymentTemplateCancelRequestTransfer): PaymentTemplateCancelResponseTransfer

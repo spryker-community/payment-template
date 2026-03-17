@@ -74,6 +74,11 @@ class PaymentTemplateConfig extends AbstractBundleConfig
         return $this->getApiBaseUrl() . $this->getSharedConfig()->getCapturePath();
     }
 
+    public function getRefundUrl(): string
+    {
+        return $this->getApiBaseUrl() . $this->getSharedConfig()->getRefundPath();
+    }
+
     /**
      * @api
      *

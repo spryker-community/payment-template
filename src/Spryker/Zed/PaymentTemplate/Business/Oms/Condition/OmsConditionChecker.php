@@ -66,4 +66,20 @@ class OmsConditionChecker implements OmsConditionCheckerInterface
         //return $paymentTemplateTransfer->getStatus() === $this->config::PAYMENT_STATUS_CAPTURED;
         return true; // Placeholder - replace with actual status check
     }
+
+    public function isPaymentRefunded(SpySalesOrderItem $orderItemEntity): bool
+    {
+        $paymentTemplateTransfer = $this->paymentReader->findPaymentByOrderItem($orderItemEntity);
+
+        if ($paymentTemplateTransfer === null) {
+            return false;
+        }
+
+        // TODO: Replace placeholder return value with actual status check.
+        // Check if the payment status matches the refunded state.
+        // The status constant must match what you set in OmsCommandHandler::updatePaymentAfterRefund().
+        // e.g.
+        //return $paymentTemplateTransfer->getStatus() === $this->config::PAYMENT_STATUS_REFUNDED;
+        return true; // Placeholder - replace with actual status check
+    }
 }

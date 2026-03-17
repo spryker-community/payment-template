@@ -95,6 +95,21 @@ interface PaymentTemplateFacadeInterface
 
     /**
      * Specification:
+     * - Executes payment refund command.
+     * - Called by OMS RefundPlugin refund the captured funds.
+     * - Communicates with payment provider via RefundAdapter.
+     *
+     * @api
+     *
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $orderEntity
+     * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $orderItems
+     *
+     * @return void
+     */
+    public function executeRefundCommand(SpySalesOrder $orderEntity, array $orderItems): void;
+
+    /**
+     * Specification:
      * - Executes payment cancellation command.
      * - Called by OMS CancelPlugin to cancel authorized but not captured payment.
      * - Communicates with payment provider via CancelAdapter.
@@ -146,6 +161,19 @@ interface PaymentTemplateFacadeInterface
      * @return bool
      */
     public function isPaymentCaptured(SpySalesOrderItem $orderItemEntity): bool;
+
+    /**
+     * Specification:
+     * - Checks if payment is refunded.
+     * - Called by OMS IsRefundedPlugin condition.
+     *
+     * @api
+     *
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrderItem $orderItemEntity
+     *
+     * @return bool
+     */
+    public function isPaymentRefunded(SpySalesOrderItem $orderItemEntity): bool;
 
     /**
      * Specification:
