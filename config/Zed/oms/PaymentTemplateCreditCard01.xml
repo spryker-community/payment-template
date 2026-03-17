@@ -76,7 +76,7 @@
              ==================================================================== -->
 
         <events>
-            <event name="wait" timeout="1s"/>
+            <event name="wait" timeout="1 second"/>
             <event name="authorize" manual="true" onEnter="true" command="PaymentTemplate/Authorize"/>
             <event name="capture" manual="true" onEnter="true" command="PaymentTemplate/Capture"/>
             <event name="cancel" manual="true" command="PaymentTemplate/Cancel"/>

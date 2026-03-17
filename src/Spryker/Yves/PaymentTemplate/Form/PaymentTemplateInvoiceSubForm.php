@@ -46,7 +46,7 @@ class PaymentTemplateInvoiceSubForm extends AbstractSubFormType implements SubFo
     {
         $resolver->setDefaults([
             'data_class' => PaymentTemplateInvoiceTransfer::class,
-        ]);
+        ])->setRequired(static::OPTIONS_FIELD_NAME);
     }
 
     /**

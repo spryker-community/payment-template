@@ -46,7 +46,7 @@ class PaymentTemplateCreditCardSubForm extends AbstractSubFormType implements Su
     {
         $resolver->setDefaults([
             'data_class' => PaymentTemplateCreditCardTransfer::class,
-        ]);
+        ])->setRequired(static::OPTIONS_FIELD_NAME);
     }
 
     /**
