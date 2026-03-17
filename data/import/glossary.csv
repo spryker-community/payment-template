@@ -11,3 +11,4 @@ oms.state.capture-pending,Capture Pending,en_US
 oms.state.captured,Captured,en_US
 oms.state.refund-pending,Refund Pending,en_US
 oms.state.refunded,Refunded,en_US
+oms.state.closed-for-refund,Refunded,en_US

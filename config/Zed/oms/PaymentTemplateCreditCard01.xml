@@ -20,6 +20,7 @@
             <state name="captured" display="oms.state.captured"/>
             <state name="refund pending" display="oms.state.refund-pending"/>
             <state name="refunded" display="oms.state.refunded"/>
+            <state name="closed for refund" display="oms.state.closed-for-refund"/>
             <state name="canceled" display="oms.state.canceled"/>
         </states>
 
@@ -77,6 +78,12 @@
                 <target>refunded</target>
             </transition>
 
+            <transition happy="true">
+                <source>captured</source>
+                <target>closed for refund</target>
+                <event>close for refund</event>
+            </transition>
+
             <!-- Cancel -->
             <transition>
                 <source>authorized</source>
@@ -94,6 +101,7 @@
             <event name="authorize" manual="true" onEnter="true" command="PaymentTemplate/Authorize"/>
             <event name="capture" manual="true" onEnter="true" command="PaymentTemplate/Capture"/>
             <event name="refund" manual="true" command="PaymentTemplate/Refund"/>
+            <event name="close for refund" timeout="30 days"/>
             <event name="cancel" manual="true" command="PaymentTemplate/Cancel"/>
         </events>
 
